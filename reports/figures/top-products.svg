@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="455" viewBox="0 0 900 455">
+<style>text{font-family:Arial,sans-serif;fill:#1f2937}.title{font-size:22px;font-weight:700}.label{font-size:13px}.value{font-size:12px;fill:#374151}</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="24" y="34">Top 10 Products by Revenue</text>
+<text class="label" x="24" y="85">PAPER CRAFT , LITTLE BIRDIE</text>
+<rect x="260" y="70" width="600.0" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="868.0" y="85">£168,470</text>
+<text class="label" x="24" y="119">REGENCY CAKESTAND 3 TIER</text>
+<rect x="260" y="104" width="507.8" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="775.8" y="119">£142,593</text>
+<text class="label" x="24" y="153">WHITE HANGING HEART T-LIGHT HOLDER</text>
+<rect x="260" y="138" width="357.7" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="625.7" y="153">£100,448</text>
+<text class="label" x="24" y="187">JUMBO BAG RED RETROSPOT</text>
+<rect x="260" y="172" width="303.5" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="571.5" y="187">£85,221</text>
+<text class="label" x="24" y="221">MEDIUM CERAMIC TOP STORAGE JAR</text>
+<rect x="260" y="206" width="290.0" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="558.0" y="221">£81,417</text>
+<text class="label" x="24" y="255">POSTAGE</text>
+<rect x="260" y="240" width="277.1" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="545.1" y="255">£77,804</text>
+<text class="label" x="24" y="289">PARTY BUNTING</text>
+<rect x="260" y="274" width="245.2" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="513.2" y="289">£68,844</text>
+<text class="label" x="24" y="323">ASSORTED COLOUR BIRD ORNAMENT</text>
+<rect x="260" y="308" width="201.5" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="469.5" y="323">£56,580</text>
+<text class="label" x="24" y="357">Manual</text>
+<rect x="260" y="342" width="191.5" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="459.5" y="357">£53,780</text>
+<text class="label" x="24" y="391">RABBIT NIGHT LIGHT</text>
+<rect x="260" y="376" width="182.9" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="450.9" y="391">£51,346</text>
+</svg>
