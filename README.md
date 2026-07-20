@@ -33,6 +33,23 @@ Cleaning steps:
 | Countries | 37 |
 | Average order value | £481 |
 
+## Data Quality Summary
+
+The raw dataset contains 541,909 rows. After cleaning, 397,884 completed sales transactions remain for analysis, meaning 144,025 rows were removed or excluded from the main analysis.
+
+Key quality checks:
+
+| Check | Affected rows | Why it matters |
+| --- | ---: | --- |
+| Missing customer IDs | 135,080 | Customer segmentation and retention analysis require known customers. |
+| Zero or negative quantity | 10,624 | These rows can represent returns or adjustments and distort sales revenue. |
+| Cancelled invoices | 9,288 | Cancelled orders should not be counted as completed sales. |
+| Exact duplicate rows | 5,268 | Duplicate rows may double-count transactions if not reviewed. |
+| Missing product descriptions | 1,454 | Product-level analysis needs valid product descriptions. |
+| Zero or negative unit price | 2,517 | Invalid prices distort revenue and average order value. |
+
+Detailed checks are saved in `reports/tables/data_quality_summary.csv` and the cleaning funnel is saved in `reports/tables/cleaning_funnel.csv`.
+
 ## Visual Highlights
 
 ### Monthly Revenue Trend

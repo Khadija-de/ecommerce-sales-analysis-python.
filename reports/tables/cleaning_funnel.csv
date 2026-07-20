@@ -1,0 +1,7 @@
+Step,RowsRemaining,RowsRemoved,RowsRemainingRate
+Raw data,541909,0,1.0
+Remove missing product descriptions,540455,1454,0.9973168926886249
+Remove zero or negative quantity,530693,9762,0.9793027980712629
+Remove zero or negative unit price,530104,589,0.9782158997174802
+Remove missing customer IDs,397884,132220,0.7342265952401602
+Remove cancelled invoices,397884,0,0.7342265952401602

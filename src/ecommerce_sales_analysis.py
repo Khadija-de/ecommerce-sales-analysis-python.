@@ -45,6 +45,127 @@ def clean_data(raw_df: pd.DataFrame) -> pd.DataFrame:
     return clean_df
 
 
+def build_data_quality_report(
+    raw_df: pd.DataFrame, clean_df: pd.DataFrame
+) -> dict[str, pd.DataFrame]:
+    """Create data-quality tables for transparent cleaning decisions."""
+
+    total_rows = len(raw_df)
+    canceled_invoices = raw_df["InvoiceNo"].astype(str).str.startswith("C")
+    missing_description = raw_df["Description"].isna()
+    missing_customer = raw_df["CustomerID"].isna()
+    non_positive_quantity = raw_df["Quantity"] <= 0
+    non_positive_unit_price = raw_df["UnitPrice"] <= 0
+    exact_duplicates = raw_df.duplicated()
+
+    quality_summary = pd.DataFrame(
+        [
+            (
+                "Missing product descriptions",
+                int(missing_description.sum()),
+                missing_description.mean(),
+                "Cannot support reliable product-level analysis.",
+                "Medium",
+            ),
+            (
+                "Missing customer IDs",
+                int(missing_customer.sum()),
+                missing_customer.mean(),
+                "Cannot support customer-level segmentation or retention analysis.",
+                "High",
+            ),
+            (
+                "Cancelled invoices",
+                int(canceled_invoices.sum()),
+                canceled_invoices.mean(),
+                "Represents returns or cancellations, not completed sales.",
+                "High",
+            ),
+            (
+                "Zero or negative quantity",
+                int(non_positive_quantity.sum()),
+                non_positive_quantity.mean(),
+                "Would distort revenue and volume metrics for normal sales.",
+                "High",
+            ),
+            (
+                "Zero or negative unit price",
+                int(non_positive_unit_price.sum()),
+                non_positive_unit_price.mean(),
+                "Would distort revenue and average order value.",
+                "High",
+            ),
+            (
+                "Exact duplicate rows",
+                int(exact_duplicates.sum()),
+                exact_duplicates.mean(),
+                "May double-count transactions if not reviewed.",
+                "Medium",
+            ),
+        ],
+        columns=["Check", "AffectedRows", "AffectedRate", "AnalyticalRisk", "Severity"],
+    )
+
+    cleaning_steps = [
+        ("Raw data", raw_df),
+        ("Remove missing product descriptions", raw_df.dropna(subset=["Description"])),
+    ]
+    cleaning_steps.append(
+        (
+            "Remove zero or negative quantity",
+            cleaning_steps[-1][1][cleaning_steps[-1][1]["Quantity"] > 0],
+        )
+    )
+    cleaning_steps.append(
+        (
+            "Remove zero or negative unit price",
+            cleaning_steps[-1][1][cleaning_steps[-1][1]["UnitPrice"] > 0],
+        )
+    )
+    cleaning_steps.append(
+        (
+            "Remove missing customer IDs",
+            cleaning_steps[-1][1].dropna(subset=["CustomerID"]),
+        )
+    )
+    cleaning_steps.append(
+        (
+            "Remove cancelled invoices",
+            cleaning_steps[-1][1][
+                ~cleaning_steps[-1][1]["InvoiceNo"].astype(str).str.startswith("C")
+            ],
+        )
+    )
+
+    funnel_rows = []
+    previous_rows = None
+    for step, step_df in cleaning_steps:
+        rows_remaining = len(step_df)
+        rows_removed = 0 if previous_rows is None else previous_rows - rows_remaining
+        funnel_rows.append((step, rows_remaining, rows_removed, rows_remaining / total_rows))
+        previous_rows = rows_remaining
+
+    cleaning_funnel = pd.DataFrame(
+        funnel_rows,
+        columns=["Step", "RowsRemaining", "RowsRemoved", "RowsRemainingRate"],
+    )
+
+    nulls_by_column = (
+        raw_df.isna()
+        .sum()
+        .rename("MissingValues")
+        .reset_index()
+        .rename(columns={"index": "Column"})
+    )
+    nulls_by_column["MissingRate"] = nulls_by_column["MissingValues"] / total_rows
+
+    return {
+        "data_quality_summary": quality_summary,
+        "cleaning_funnel": cleaning_funnel,
+        "nulls_by_column": nulls_by_column,
+    }
+
+
 def build_outputs(clean_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
     """Create KPI and ranking tables used in the project."""
 
@@ -238,7 +359,11 @@ def save_figures(outputs: dict[str, pd.DataFrame]) -> None:
     )
 
 
-def save_summary(clean_df: pd.DataFrame, outputs: dict[str, pd.DataFrame]) -> None:
+def save_summary(
+    clean_df: pd.DataFrame,
+    outputs: dict[str, pd.DataFrame],
+    quality_outputs: dict[str, pd.DataFrame],
+) -> None:
     """Write a short Markdown summary for the portfolio repository."""
 
     kpi_values = dict(zip(outputs["kpis"]["Metric"], outputs["kpis"]["Value"], strict=True))
@@ -247,6 +372,11 @@ def save_summary(clean_df: pd.DataFrame, outputs: dict[str, pd.DataFrame]) -> No
     top_month = outputs["monthly_revenue"].sort_values("Revenue", ascending=False).iloc[0]
     start_date = clean_df["InvoiceDate"].min().date()
     end_date = clean_df["InvoiceDate"].max().date()
+    cleaning_funnel = quality_outputs["cleaning_funnel"]
+    raw_rows = int(cleaning_funnel.iloc[0]["RowsRemaining"])
+    final_rows = int(cleaning_funnel.iloc[-1]["RowsRemaining"])
+    removed_rows = raw_rows - final_rows
+    removed_rate = removed_rows / raw_rows
 
     summary = f"""# E-commerce Sales Analysis Summary
 
@@ -257,6 +387,9 @@ def save_summary(clean_df: pd.DataFrame, outputs: dict[str, pd.DataFrame]) -> No
 - Unique invoices: {int(kpi_values["Unique invoices"]):,}
 - Unique customers: {int(kpi_values["Unique customers"]):,}
 - Countries represented: {int(kpi_values["Countries"]):,}
+- Raw rows reviewed: {raw_rows:,}
+- Rows retained after cleaning: {final_rows:,}
+- Rows removed during cleaning: {removed_rows:,} ({removed_rate:.1%})
 
 ## Key Results
 
@@ -265,6 +398,12 @@ def save_summary(clean_df: pd.DataFrame, outputs: dict[str, pd.DataFrame]) -> No
 - Highest revenue month: {top_month["YearMonth"]} with {money(top_month["Revenue"])}
 - Top revenue product: {top_product["Description"]} with {money(top_product["Revenue"])}
 - Top country: {top_country["Country"]} with {money(top_country["Revenue"])}
+
+## Data Quality Notes
+
+- Missing customer IDs are excluded from the main analysis because customer-level retention and segmentation require a known customer.
+- Cancelled invoices and non-positive quantity or price rows are excluded so revenue reflects completed sales.
+- Detailed data-quality checks are available in `reports/tables/data_quality_summary.csv`.
 
 ## Business Recommendations
 
@@ -281,9 +420,11 @@ def main() -> None:
     raw_df = load_data()
     clean_df = clean_data(raw_df)
     outputs = build_outputs(clean_df)
+    quality_outputs = build_data_quality_report(raw_df, clean_df)
+    outputs.update(quality_outputs)
     save_tables(outputs)
     save_figures(outputs)
-    save_summary(clean_df, outputs)
+    save_summary(clean_df, outputs, quality_outputs)
     print("Analysis outputs generated in reports/.")
 
 

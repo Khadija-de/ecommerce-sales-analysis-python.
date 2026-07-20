@@ -1,0 +1,7 @@
+Check,AffectedRows,AffectedRate,AnalyticalRisk,Severity
+Missing product descriptions,1454,0.002683107311375157,Cannot support reliable product-level analysis.,Medium
+Missing customer IDs,135080,0.249266943342886,Cannot support customer-level segmentation or retention analysis.,High
+Cancelled invoices,9288,0.017139409015166755,"Represents returns or cancellations, not completed sales.",High
+Zero or negative quantity,10624,0.019604767590130447,Would distort revenue and volume metrics for normal sales.,High
+Zero or negative unit price,2517,0.0046446912673530055,Would distort revenue and average order value.,High
+Exact duplicate rows,5268,0.009721189350979592,May double-count transactions if not reviewed.,Medium
