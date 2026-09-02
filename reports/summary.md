@@ -26,9 +26,17 @@
 - Cancelled invoices and non-positive quantity or price rows are excluded so revenue reflects completed sales.
 - Detailed data-quality checks are available in `reports/tables/data_quality_summary.csv`.
 
+## Seasonality Notes
+
+- Strongest sales month: 2011-11 with £1,161,817
+- Weakest sales month: 2011-02 with £447,137
+- Strongest weekday: Thursday with £1,976,859
+- Weakest weekday: Sunday with £792,514
+
 ## Business Recommendations
 
 - Prioritize inventory planning around the highest-revenue products before seasonal peaks.
 - Treat the United Kingdom as the core market and investigate growth opportunities in the next highest-revenue countries.
 - Use high-value customer segments for retention campaigns, loyalty offers, or targeted communication.
 - Protect repeat-customer relationships because they generate most of the cleaned revenue.
+- Plan inventory and promotions before the strongest monthly and weekly sales periods.

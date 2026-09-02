@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="319" viewBox="0 0 900 319">
+<style>text{font-family:Arial,sans-serif;fill:#1f2937}.title{font-size:22px;font-weight:700}.label{font-size:13px}.value{font-size:12px;fill:#374151}</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="24" y="34">Revenue by Weekday</text>
+<text class="label" x="24" y="85">Monday</text>
+<rect x="260" y="70" width="414.9" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="682.9" y="85">£1,367,146</text>
+<text class="label" x="24" y="119">Tuesday</text>
+<rect x="260" y="104" width="516.2" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="784.2" y="119">£1,700,635</text>
+<text class="label" x="24" y="153">Wednesday</text>
+<rect x="260" y="138" width="482.1" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="750.1" y="153">£1,588,336</text>
+<text class="label" x="24" y="187">Thursday</text>
+<rect x="260" y="172" width="600.0" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="868.0" y="187">£1,976,859</text>
+<text class="label" x="24" y="221">Friday</text>
+<rect x="260" y="206" width="451.0" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="719.0" y="221">£1,485,917</text>
+<text class="label" x="24" y="255">Sunday</text>
+<rect x="260" y="240" width="240.5" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="508.5" y="255">£792,514</text>
+</svg>

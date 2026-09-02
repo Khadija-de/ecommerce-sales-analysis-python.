@@ -34,6 +34,14 @@ Cleaning steps:
 | Average order value | £481 |
 | Revenue from repeat customers | 93.1% |
 
+## Sales Seasonality Insights
+
+Revenue shows a clear seasonal pattern. November 2011 was the strongest month with £1,161,817 in cleaned revenue, while February 2011 was the weakest full month with £447,137. The strongest sales week was 2011-W49, which generated £408,569.
+
+By weekday, Thursday generated the most revenue at £1,976,859, while Sunday generated the least at £792,514. Saturday does not appear in the cleaned transaction data, so weekday interpretation should be treated as dataset-specific.
+
+Detailed seasonality outputs are saved in `reports/tables/monthly_revenue.csv`, `reports/tables/weekly_revenue.csv`, `reports/tables/weekday_revenue.csv`, and `reports/tables/seasonality_summary.csv`.
+
 ## Data Quality Summary
 
 The raw dataset contains 541,909 rows. After cleaning, 397,884 completed sales transactions remain for analysis, meaning 144,025 rows were removed or excluded from the main analysis.
@@ -57,6 +65,14 @@ Detailed checks are saved in `reports/tables/data_quality_summary.csv` and the c
 
 ![Monthly revenue trend](reports/figures/monthly-revenue.svg)
 
+### Weekly Revenue Trend
+
+![Weekly revenue trend](reports/figures/weekly-revenue.svg)
+
+### Revenue by Weekday
+
+![Revenue by weekday](reports/figures/weekday-revenue.svg)
+
 ### Top Products by Revenue
 
 ![Top products by revenue](reports/figures/top-products.svg)
@@ -78,6 +94,7 @@ Repeat customers represent 65.6% of known customers but generate 93.1% of cleane
 - Use high-value customer segments for retention campaigns, loyalty offers, or targeted communication.
 - Monitor monthly revenue patterns to prepare stock, promotions, and staffing before peak periods.
 - Protect repeat customers with loyalty campaigns because they contribute most of the revenue.
+- Prepare inventory, promotions, and staffing before the November and early-December sales peak.
 
 ## Project Structure
 

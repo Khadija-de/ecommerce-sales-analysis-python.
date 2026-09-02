@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420">
+<style>text{font-family:Arial,sans-serif;fill:#1f2937}.title{font-size:22px;font-weight:700}.axis{font-size:12px;fill:#4b5563}.value{font-size:12px;fill:#374151}</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="24" y="34">Weekly Revenue Trend</text>
+<line x1="70" y1="340" x2="860" y2="340" stroke="#d1d5db"/>
+<line x1="70" y1="70" x2="70" y2="340" stroke="#d1d5db"/>
+<polyline fill="none" stroke="#2563eb" stroke-width="3" points="70.0,263.1 85.2,215.3 100.4,252.4 115.6,340.0 130.8,288.8 146.0,259.1 161.2,243.4 176.3,295.9 191.5,295.3 206.7,308.8 221.9,280.5 237.1,277.0 252.3,286.7 267.5,290.7 282.7,271.3 297.9,277.6 313.1,267.1 328.3,285.0 343.5,273.7 358.7,287.9 373.8,319.6 389.0,276.5 404.2,241.1 419.4,228.1 434.6,264.9 449.8,298.1 465.0,229.8 480.2,246.3 495.4,290.3 510.6,287.6 525.8,276.5 541.0,286.2 556.2,249.6 571.3,251.7 586.5,258.0 601.7,267.3 616.9,249.1 632.1,264.1 647.3,289.4 662.5,249.9 677.7,218.5 692.9,143.7 708.1,229.8 723.3,153.0 738.5,222.1 753.7,184.1 768.8,197.3 784.0,180.2 799.2,177.1 814.4,167.4 829.6,188.5 844.8,186.8 860.0,70.0"/>
+<circle cx="70.0" cy="263.1" r="4" fill="#1d4ed8"/>
+<text class="value" x="50.0" y="253.1">£149,386</text>
+<circle cx="85.2" cy="215.3" r="4" fill="#1d4ed8"/>
+<circle cx="100.4" cy="252.4" r="4" fill="#1d4ed8"/>
+<circle cx="115.6" cy="340.0" r="4" fill="#1d4ed8"/>
+<circle cx="130.8" cy="288.8" r="4" fill="#1d4ed8"/>
+<circle cx="146.0" cy="259.1" r="4" fill="#1d4ed8"/>
+<circle cx="161.2" cy="243.4" r="4" fill="#1d4ed8"/>
+<circle cx="176.3" cy="295.9" r="4" fill="#1d4ed8"/>
+<circle cx="191.5" cy="295.3" r="4" fill="#1d4ed8"/>
+<circle cx="206.7" cy="308.8" r="4" fill="#1d4ed8"/>
+<circle cx="221.9" cy="280.5" r="4" fill="#1d4ed8"/>
+<circle cx="237.1" cy="277.0" r="4" fill="#1d4ed8"/>
+<circle cx="252.3" cy="286.7" r="4" fill="#1d4ed8"/>
+<circle cx="267.5" cy="290.7" r="4" fill="#1d4ed8"/>
+<circle cx="282.7" cy="271.3" r="4" fill="#1d4ed8"/>
+<circle cx="297.9" cy="277.6" r="4" fill="#1d4ed8"/>
+<circle cx="313.1" cy="267.1" r="4" fill="#1d4ed8"/>
+<circle cx="328.3" cy="285.0" r="4" fill="#1d4ed8"/>
+<circle cx="343.5" cy="273.7" r="4" fill="#1d4ed8"/>
+<circle cx="358.7" cy="287.9" r="4" fill="#1d4ed8"/>
+<circle cx="373.8" cy="319.6" r="4" fill="#1d4ed8"/>
+<circle cx="389.0" cy="276.5" r="4" fill="#1d4ed8"/>
+<circle cx="404.2" cy="241.1" r="4" fill="#1d4ed8"/>
+<circle cx="419.4" cy="228.1" r="4" fill="#1d4ed8"/>
+<circle cx="434.6" cy="264.9" r="4" fill="#1d4ed8"/>
+<circle cx="449.8" cy="298.1" r="4" fill="#1d4ed8"/>
+<circle cx="465.0" cy="229.8" r="4" fill="#1d4ed8"/>
+<circle cx="480.2" cy="246.3" r="4" fill="#1d4ed8"/>
+<circle cx="495.4" cy="290.3" r="4" fill="#1d4ed8"/>
+<circle cx="510.6" cy="287.6" r="4" fill="#1d4ed8"/>
+<circle cx="525.8" cy="276.5" r="4" fill="#1d4ed8"/>
+<circle cx="541.0" cy="286.2" r="4" fill="#1d4ed8"/>
+<circle cx="556.2" cy="249.6" r="4" fill="#1d4ed8"/>
+<circle cx="571.3" cy="251.7" r="4" fill="#1d4ed8"/>
+<circle cx="586.5" cy="258.0" r="4" fill="#1d4ed8"/>
+<circle cx="601.7" cy="267.3" r="4" fill="#1d4ed8"/>
+<circle cx="616.9" cy="249.1" r="4" fill="#1d4ed8"/>
+<circle cx="632.1" cy="264.1" r="4" fill="#1d4ed8"/>
+<circle cx="647.3" cy="289.4" r="4" fill="#1d4ed8"/>
+<circle cx="662.5" cy="249.9" r="4" fill="#1d4ed8"/>
+<circle cx="677.7" cy="218.5" r="4" fill="#1d4ed8"/>
+<circle cx="692.9" cy="143.7" r="4" fill="#1d4ed8"/>
+<circle cx="708.1" cy="229.8" r="4" fill="#1d4ed8"/>
+<circle cx="723.3" cy="153.0" r="4" fill="#1d4ed8"/>
+<circle cx="738.5" cy="222.1" r="4" fill="#1d4ed8"/>
+<circle cx="753.7" cy="184.1" r="4" fill="#1d4ed8"/>
+<circle cx="768.8" cy="197.3" r="4" fill="#1d4ed8"/>
+<circle cx="784.0" cy="180.2" r="4" fill="#1d4ed8"/>
+<circle cx="799.2" cy="177.1" r="4" fill="#1d4ed8"/>
+<circle cx="814.4" cy="167.4" r="4" fill="#1d4ed8"/>
+<circle cx="829.6" cy="188.5" r="4" fill="#1d4ed8"/>
+<circle cx="844.8" cy="186.8" r="4" fill="#1d4ed8"/>
+<circle cx="860.0" cy="70.0" r="4" fill="#1d4ed8"/>
+<text class="value" x="840.0" y="60.0">£408,569</text>
+<text class="axis" x="48.0" y="378" transform="rotate(45 48.0,378)">2010-W48</text>
+<text class="axis" x="78.4" y="378" transform="rotate(45 78.4,378)">2010-W50</text>
+<text class="axis" x="108.8" y="378" transform="rotate(45 108.8,378)">2011-W01</text>
+<text class="axis" x="139.2" y="378" transform="rotate(45 139.2,378)">2011-W03</text>
+<text class="axis" x="169.5" y="378" transform="rotate(45 169.5,378)">2011-W05</text>
+<text class="axis" x="199.9" y="378" transform="rotate(45 199.9,378)">2011-W07</text>
+<text class="axis" x="230.3" y="378" transform="rotate(45 230.3,378)">2011-W09</text>
+<text class="axis" x="260.7" y="378" transform="rotate(45 260.7,378)">2011-W11</text>
+<text class="axis" x="291.1" y="378" transform="rotate(45 291.1,378)">2011-W13</text>
+<text class="axis" x="321.5" y="378" transform="rotate(45 321.5,378)">2011-W15</text>
+<text class="axis" x="351.8" y="378" transform="rotate(45 351.8,378)">2011-W17</text>
+<text class="axis" x="382.2" y="378" transform="rotate(45 382.2,378)">2011-W19</text>
+<text class="axis" x="412.6" y="378" transform="rotate(45 412.6,378)">2011-W21</text>
+<text class="axis" x="443.0" y="378" transform="rotate(45 443.0,378)">2011-W23</text>
+<text class="axis" x="473.4" y="378" transform="rotate(45 473.4,378)">2011-W25</text>
+<text class="axis" x="503.8" y="378" transform="rotate(45 503.8,378)">2011-W27</text>
+<text class="axis" x="534.2" y="378" transform="rotate(45 534.2,378)">2011-W29</text>
+<text class="axis" x="564.5" y="378" transform="rotate(45 564.5,378)">2011-W31</text>
+<text class="axis" x="594.9" y="378" transform="rotate(45 594.9,378)">2011-W33</text>
+<text class="axis" x="625.3" y="378" transform="rotate(45 625.3,378)">2011-W35</text>
+<text class="axis" x="655.7" y="378" transform="rotate(45 655.7,378)">2011-W37</text>
+<text class="axis" x="686.1" y="378" transform="rotate(45 686.1,378)">2011-W39</text>
+<text class="axis" x="716.5" y="378" transform="rotate(45 716.5,378)">2011-W41</text>
+<text class="axis" x="746.8" y="378" transform="rotate(45 746.8,378)">2011-W43</text>
+<text class="axis" x="777.2" y="378" transform="rotate(45 777.2,378)">2011-W45</text>
+<text class="axis" x="807.6" y="378" transform="rotate(45 807.6,378)">2011-W47</text>
+<text class="axis" x="838.0" y="378" transform="rotate(45 838.0,378)">2011-W49</text>
+</svg>

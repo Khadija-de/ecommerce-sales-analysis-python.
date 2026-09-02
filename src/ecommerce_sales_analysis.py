@@ -42,6 +42,8 @@ def clean_data(raw_df: pd.DataFrame) -> pd.DataFrame:
     clean_df["CustomerID"] = clean_df["CustomerID"].astype(int).astype(str)
     clean_df["Revenue"] = clean_df["Quantity"] * clean_df["UnitPrice"]
     clean_df["YearMonth"] = clean_df["InvoiceDate"].dt.to_period("M").astype(str)
+    clean_df["YearWeek"] = clean_df["InvoiceDate"].dt.strftime("%G-W%V")
+    clean_df["Weekday"] = clean_df["InvoiceDate"].dt.day_name()
     return clean_df
 
 
@@ -190,6 +192,67 @@ def build_outputs(clean_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
         .sum()
         .sort_values("YearMonth")
     )
+    weekly_revenue = (
+        clean_df.groupby("YearWeek", as_index=False)["Revenue"]
+        .sum()
+        .sort_values("YearWeek")
+    )
+
+    weekday_revenue = (
+        clean_df.groupby("Weekday", as_index=False)["Revenue"]
+        .sum()
+        .assign(
+            WeekdayOrder=lambda df: df["Weekday"].map(
+                {
+                    "Monday": 1,
+                    "Tuesday": 2,
+                    "Wednesday": 3,
+                    "Thursday": 4,
+                    "Friday": 5,
+                    "Saturday": 6,
+                    "Sunday": 7,
+                }
+            )
+        )
+        .sort_values("WeekdayOrder")
+        .drop(columns="WeekdayOrder")
+    )
+
+    seasonality_summary = pd.DataFrame(
+        [
+            (
+                "Highest revenue month",
+                monthly_revenue.loc[monthly_revenue["Revenue"].idxmax(), "YearMonth"],
+                monthly_revenue["Revenue"].max(),
+            ),
+            (
+                "Lowest revenue month",
+                monthly_revenue.loc[monthly_revenue["Revenue"].idxmin(), "YearMonth"],
+                monthly_revenue["Revenue"].min(),
+            ),
+            (
+                "Highest revenue week",
+                weekly_revenue.loc[weekly_revenue["Revenue"].idxmax(), "YearWeek"],
+                weekly_revenue["Revenue"].max(),
+            ),
+            (
+                "Lowest revenue week",
+                weekly_revenue.loc[weekly_revenue["Revenue"].idxmin(), "YearWeek"],
+                weekly_revenue["Revenue"].min(),
+            ),
+            (
+                "Highest revenue weekday",
+                weekday_revenue.loc[weekday_revenue["Revenue"].idxmax(), "Weekday"],
+                weekday_revenue["Revenue"].max(),
+            ),
+            (
+                "Lowest revenue weekday",
+                weekday_revenue.loc[weekday_revenue["Revenue"].idxmin(), "Weekday"],
+                weekday_revenue["Revenue"].min(),
+            ),
+        ],
+        columns=["Insight", "Period", "Revenue"],
+    )
 
     top_products = (
         clean_df.groupby("Description", as_index=False)["Revenue"]
@@ -247,6 +310,9 @@ def build_outputs(clean_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
     return {
         "kpis": kpis,
         "monthly_revenue": monthly_revenue,
+        "weekly_revenue": weekly_revenue,
+        "weekday_revenue": weekday_revenue,
+        "seasonality_summary": seasonality_summary,
         "top_products": top_products,
         "top_countries": top_countries,
         "top_customers": top_customers,
@@ -378,6 +444,20 @@ def save_figures(outputs: dict[str, pd.DataFrame]) -> None:
         "Monthly Revenue Trend",
         FIGURES_DIR / "monthly-revenue.svg",
     )
+    svg_line_chart(
+        outputs["weekly_revenue"],
+        "YearWeek",
+        "Revenue",
+        "Weekly Revenue Trend",
+        FIGURES_DIR / "weekly-revenue.svg",
+    )
+    svg_bar_chart(
+        outputs["weekday_revenue"],
+        "Weekday",
+        "Revenue",
+        "Revenue by Weekday",
+        FIGURES_DIR / "weekday-revenue.svg",
+    )
     svg_bar_chart(
         outputs["top_products"],
         "Description",
@@ -412,6 +492,7 @@ def save_summary(
     top_product = outputs["top_products"].iloc[0]
     top_country = outputs["top_countries"].iloc[0]
     top_month = outputs["monthly_revenue"].sort_values("Revenue", ascending=False).iloc[0]
+    seasonality = outputs["seasonality_summary"].set_index("Insight")
     repeat_customers = outputs["customer_retention_summary"].set_index("CustomerType").loc[
         "Repeat customer"
     ]
@@ -451,12 +532,20 @@ def save_summary(
 - Cancelled invoices and non-positive quantity or price rows are excluded so revenue reflects completed sales.
 - Detailed data-quality checks are available in `reports/tables/data_quality_summary.csv`.
 
+## Seasonality Notes
+
+- Strongest sales month: {seasonality.loc["Highest revenue month", "Period"]} with {money(seasonality.loc["Highest revenue month", "Revenue"])}
+- Weakest sales month: {seasonality.loc["Lowest revenue month", "Period"]} with {money(seasonality.loc["Lowest revenue month", "Revenue"])}
+- Strongest weekday: {seasonality.loc["Highest revenue weekday", "Period"]} with {money(seasonality.loc["Highest revenue weekday", "Revenue"])}
+- Weakest weekday: {seasonality.loc["Lowest revenue weekday", "Period"]} with {money(seasonality.loc["Lowest revenue weekday", "Revenue"])}
+
 ## Business Recommendations
 
 - Prioritize inventory planning around the highest-revenue products before seasonal peaks.
 - Treat the United Kingdom as the core market and investigate growth opportunities in the next highest-revenue countries.
 - Use high-value customer segments for retention campaigns, loyalty offers, or targeted communication.
 - Protect repeat-customer relationships because they generate most of the cleaned revenue.
+- Plan inventory and promotions before the strongest monthly and weekly sales periods.
 """
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
