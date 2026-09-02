@@ -32,6 +32,7 @@ Cleaning steps:
 | Unique products | 3,877 |
 | Countries | 37 |
 | Average order value | £481 |
+| Revenue from repeat customers | 93.1% |
 
 ## Data Quality Summary
 
@@ -64,12 +65,19 @@ Detailed checks are saved in `reports/tables/data_quality_summary.csv` and the c
 
 ![Top countries by revenue](reports/figures/top-countries.svg)
 
+### Customer Retention
+
+![Revenue by customer retention type](reports/figures/customer-retention.svg)
+
+Repeat customers represent 65.6% of known customers but generate 93.1% of cleaned revenue. This suggests that retention, loyalty, and targeted communication are important business levers for this retailer.
+
 ## Business Recommendations
 
 - Prioritize inventory planning around the highest-revenue products before seasonal demand peaks.
 - Treat the United Kingdom as the core market and investigate growth opportunities in the next highest-revenue countries.
 - Use high-value customer segments for retention campaigns, loyalty offers, or targeted communication.
 - Monitor monthly revenue patterns to prepare stock, promotions, and staffing before peak periods.
+- Protect repeat customers with loyalty campaigns because they contribute most of the revenue.
 
 ## Project Structure
 

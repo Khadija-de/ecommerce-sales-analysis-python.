@@ -170,10 +170,11 @@ def build_outputs(clean_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
     """Create KPI and ranking tables used in the project."""
 
     invoice_revenue = clean_df.groupby("InvoiceNo", as_index=False)["Revenue"].sum()
+    total_revenue = clean_df["Revenue"].sum()
 
     kpis = pd.DataFrame(
         [
-            ("Total revenue", clean_df["Revenue"].sum()),
+            ("Total revenue", total_revenue),
             ("Completed transactions", len(clean_df)),
             ("Unique invoices", clean_df["InvoiceNo"].nunique()),
             ("Unique customers", clean_df["CustomerID"].nunique()),
@@ -211,12 +212,46 @@ def build_outputs(clean_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
         .head(10)
     )
 
+    customer_metrics = (
+        clean_df.groupby("CustomerID")
+        .agg(
+            InvoiceCount=("InvoiceNo", "nunique"),
+            TotalRevenue=("Revenue", "sum"),
+            FirstPurchase=("InvoiceDate", "min"),
+            LastPurchase=("InvoiceDate", "max"),
+        )
+        .reset_index()
+    )
+    customer_metrics["CustomerType"] = customer_metrics["InvoiceCount"].apply(
+        lambda invoice_count: "Repeat customer" if invoice_count > 1 else "One-time customer"
+    )
+
+    customer_retention_summary = (
+        customer_metrics.groupby("CustomerType")
+        .agg(
+            Customers=("CustomerID", "nunique"),
+            Revenue=("TotalRevenue", "sum"),
+            AverageRevenuePerCustomer=("TotalRevenue", "mean"),
+            AverageInvoicesPerCustomer=("InvoiceCount", "mean"),
+        )
+        .reset_index()
+        .sort_values("Revenue", ascending=False)
+    )
+    customer_retention_summary["CustomerShare"] = (
+        customer_retention_summary["Customers"] / customer_metrics["CustomerID"].nunique()
+    )
+    customer_retention_summary["RevenueShare"] = (
+        customer_retention_summary["Revenue"] / total_revenue
+    )
+
     return {
         "kpis": kpis,
         "monthly_revenue": monthly_revenue,
         "top_products": top_products,
         "top_countries": top_countries,
         "top_customers": top_customers,
+        "customer_metrics": customer_metrics,
+        "customer_retention_summary": customer_retention_summary,
     }
 
 
@@ -357,6 +392,13 @@ def save_figures(outputs: dict[str, pd.DataFrame]) -> None:
         "Top 10 Countries by Revenue",
         FIGURES_DIR / "top-countries.svg",
     )
+    svg_bar_chart(
+        outputs["customer_retention_summary"],
+        "CustomerType",
+        "Revenue",
+        "Revenue by Customer Retention Type",
+        FIGURES_DIR / "customer-retention.svg",
+    )
 
 
 def save_summary(
@@ -370,6 +412,9 @@ def save_summary(
     top_product = outputs["top_products"].iloc[0]
     top_country = outputs["top_countries"].iloc[0]
     top_month = outputs["monthly_revenue"].sort_values("Revenue", ascending=False).iloc[0]
+    repeat_customers = outputs["customer_retention_summary"].set_index("CustomerType").loc[
+        "Repeat customer"
+    ]
     start_date = clean_df["InvoiceDate"].min().date()
     end_date = clean_df["InvoiceDate"].max().date()
     cleaning_funnel = quality_outputs["cleaning_funnel"]
@@ -398,6 +443,7 @@ def save_summary(
 - Highest revenue month: {top_month["YearMonth"]} with {money(top_month["Revenue"])}
 - Top revenue product: {top_product["Description"]} with {money(top_product["Revenue"])}
 - Top country: {top_country["Country"]} with {money(top_country["Revenue"])}
+- Repeat customers generate {repeat_customers["RevenueShare"]:.1%} of cleaned revenue.
 
 ## Data Quality Notes
 
@@ -410,6 +456,7 @@ def save_summary(
 - Prioritize inventory planning around the highest-revenue products before seasonal peaks.
 - Treat the United Kingdom as the core market and investigate growth opportunities in the next highest-revenue countries.
 - Use high-value customer segments for retention campaigns, loyalty offers, or targeted communication.
+- Protect repeat-customer relationships because they generate most of the cleaned revenue.
 """
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)

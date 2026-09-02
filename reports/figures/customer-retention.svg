@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="183" viewBox="0 0 900 183">
+<style>text{font-family:Arial,sans-serif;fill:#1f2937}.title{font-size:22px;font-weight:700}.label{font-size:13px}.value{font-size:12px;fill:#374151}</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="24" y="34">Revenue by Customer Retention Type</text>
+<text class="label" x="24" y="85">Repeat customer</text>
+<rect x="260" y="70" width="600.0" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="868.0" y="85">£8,295,096</text>
+<text class="label" x="24" y="119">One-time customer</text>
+<rect x="260" y="104" width="44.6" height="20" fill="#3b82f6" rx="4"/>
+<text class="value" x="312.6" y="119">£616,312</text>
+</svg>

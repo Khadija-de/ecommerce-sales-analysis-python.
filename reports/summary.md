@@ -18,6 +18,7 @@
 - Highest revenue month: 2011-11 with £1,161,817
 - Top revenue product: PAPER CRAFT , LITTLE BIRDIE with £168,470
 - Top country: United Kingdom with £7,308,392
+- Repeat customers generate 93.1% of cleaned revenue.
 
 ## Data Quality Notes
 
@@ -30,3 +31,4 @@
 - Prioritize inventory planning around the highest-revenue products before seasonal peaks.
 - Treat the United Kingdom as the core market and investigate growth opportunities in the next highest-revenue countries.
 - Use high-value customer segments for retention campaigns, loyalty offers, or targeted communication.
+- Protect repeat-customer relationships because they generate most of the cleaned revenue.
