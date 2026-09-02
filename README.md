@@ -2,6 +2,8 @@
 
 This project analyzes transactional e-commerce sales data to identify revenue trends, top products, key markets, and high-value customers. The goal is to turn raw retail data into practical business insights for sales planning, inventory prioritization, and customer targeting.
 
+The project includes both a Python analysis workflow and a SQL analysis version, so the same business questions can be answered with different analytics tools.
+
 ## Business Questions
 
 - How much revenue was generated after cleaning invalid transactions?
@@ -59,6 +61,19 @@ Key quality checks:
 
 Detailed checks are saved in `reports/tables/data_quality_summary.csv` and the cleaning funnel is saved in `reports/tables/cleaning_funnel.csv`.
 
+## SQL Analysis Version
+
+The `sql/` folder contains reusable SQL queries for the same analysis:
+
+- cleaned sales view logic
+- main business KPIs
+- monthly and weekly revenue trends
+- top products, countries, and customers
+- repeat vs one-time customer retention
+- raw data quality checks
+
+See [`sql/online_retail_analysis.sql`](sql/online_retail_analysis.sql) for the full query set.
+
 ## Visual Highlights
 
 ### Monthly Revenue Trend
@@ -106,6 +121,9 @@ Repeat customers represent 65.6% of known customers but generate 93.1% of cleane
 │   ├── figures/
 │   ├── tables/
 │   └── summary.md
+├── sql/
+│   ├── README.md
+│   └── online_retail_analysis.sql
 ├── src/
 │   └── ecommerce_sales_analysis.py
 ├── sales-analysis.ipynb
@@ -116,6 +134,7 @@ Repeat customers represent 65.6% of known customers but generate 93.1% of cleane
 
 - Python
 - pandas
+- SQL
 - Jupyter Notebook
 - SVG charts generated with Python standard library
 
@@ -134,6 +153,8 @@ python src/ecommerce_sales_analysis.py
 ```
 
 Or open `sales-analysis.ipynb` and run the cells in order.
+
+To review the SQL version, import `data/OnlineRetail.csv` into a SQL database table named `online_retail`, then run the queries in `sql/online_retail_analysis.sql`.
 
 ## Author
 
