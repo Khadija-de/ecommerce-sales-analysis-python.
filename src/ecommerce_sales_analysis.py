@@ -7,6 +7,7 @@ exports chart-ready tables plus lightweight SVG figures for the README.
 from __future__ import annotations
 
 from pathlib import Path
+import re
 from xml.sax.saxutils import escape
 
 import pandas as pd
@@ -17,6 +18,95 @@ DATA_PATH = ROOT / "data" / "OnlineRetail.csv"
 REPORTS_DIR = ROOT / "reports"
 TABLES_DIR = REPORTS_DIR / "tables"
 FIGURES_DIR = REPORTS_DIR / "figures"
+
+
+CATEGORY_KEYWORDS = {
+    "Non-product Charges": ("postage", "manual", "carriage", "bank charges"),
+    "Seasonal": ("christmas", "xmas", "advent", "easter", "halloween", "valentine"),
+    "Kitchen & Dining": (
+        "mug",
+        "cup",
+        "bowl",
+        "plate",
+        "tray",
+        "tea",
+        "coffee",
+        "spoon",
+        "fork",
+        "cutlery",
+        "cake",
+        "cakestand",
+        "teacup",
+        "saucer",
+        "baking",
+        "jam",
+        "spice",
+        "snack",
+        "pantry",
+        "cook",
+        "bottle",
+        "glass",
+        "kitchen",
+        "napkin",
+        "teapot",
+    ),
+    "Home Decor": (
+        "candle",
+        "holder",
+        "lantern",
+        "frame",
+        "mirror",
+        "clock",
+        "cushion",
+        "rug",
+        "wreath",
+        "bunting",
+        "decoration",
+        "light",
+        "lamp",
+        "plaque",
+        "doormat",
+        "wall",
+        "ornament",
+        "board",
+        "sign",
+        "memoboard",
+        "chest",
+        "rack",
+        "wicker",
+        "heart",
+    ),
+    "Bags & Storage": ("bag", "basket", "box", "storage", "tin", "hamper"),
+    "Stationery & Crafts": (
+        "card",
+        "paper",
+        "notebook",
+        "pencil",
+        "pen",
+        "sticker",
+        "tape",
+        "craft",
+        "wrap",
+        "tag",
+    ),
+    "Toys & Children": ("toy", "game", "doll", "child", "baby", "puzzle", "teddy"),
+    "Garden & Outdoor": ("garden", "plant", "flower", "watering", "outdoor"),
+    "Personal & Bathroom": ("bath", "bathroom", "soap", "towel", "cosmetic"),
+    "Gifts & Accessories": (
+        "gift",
+        "necklace",
+        "bracelet",
+        "charm",
+        "key ring",
+        "purse",
+        "wallet",
+        "scarf",
+        "jewellery",
+        "hand warmer",
+        "fan",
+        "shopper",
+    ),
+}
 
 
 def money(value: float) -> str:
@@ -45,6 +135,19 @@ def clean_data(raw_df: pd.DataFrame) -> pd.DataFrame:
     clean_df["YearWeek"] = clean_df["InvoiceDate"].dt.strftime("%G-W%V")
     clean_df["Weekday"] = clean_df["InvoiceDate"].dt.day_name()
     return clean_df
+
+
+def assign_product_category(description: str) -> str:
+    """Assign a transparent, keyword-based category to a product description."""
+
+    normalized_description = str(description).casefold()
+    for category, keywords in CATEGORY_KEYWORDS.items():
+        if any(
+            re.search(rf"\b{re.escape(keyword)}\b", normalized_description)
+            for keyword in keywords
+        ):
+            return category
+    return "Other"
 
 
 def build_data_quality_report(
@@ -307,6 +410,42 @@ def build_outputs(clean_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
         customer_retention_summary["Revenue"] / total_revenue
     )
 
+    categorized_df = clean_df.copy()
+    category_lookup = {
+        description: assign_product_category(description)
+        for description in categorized_df["Description"].unique()
+    }
+    categorized_df["ProductCategory"] = categorized_df["Description"].map(category_lookup)
+    product_category_summary = (
+        categorized_df.groupby("ProductCategory")
+        .agg(
+            Revenue=("Revenue", "sum"),
+            Quantity=("Quantity", "sum"),
+            Invoices=("InvoiceNo", "nunique"),
+            Customers=("CustomerID", "nunique"),
+            Products=("Description", "nunique"),
+        )
+        .reset_index()
+        .sort_values("Revenue", ascending=False)
+    )
+    product_category_summary["RevenueShare"] = (
+        product_category_summary["Revenue"] / total_revenue
+    )
+    product_category_summary["AverageRevenuePerInvoice"] = (
+        product_category_summary["Revenue"] / product_category_summary["Invoices"]
+    )
+
+    product_revenue_by_category = (
+        categorized_df.groupby(["ProductCategory", "Description"], as_index=False)[
+            "Revenue"
+        ]
+        .sum()
+        .sort_values(["ProductCategory", "Revenue"], ascending=[True, False])
+    )
+    top_product_by_category = product_revenue_by_category.drop_duplicates(
+        subset="ProductCategory", keep="first"
+    ).sort_values("Revenue", ascending=False)
+
     return {
         "kpis": kpis,
         "monthly_revenue": monthly_revenue,
@@ -318,6 +457,8 @@ def build_outputs(clean_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
         "top_customers": top_customers,
         "customer_metrics": customer_metrics,
         "customer_retention_summary": customer_retention_summary,
+        "product_category_summary": product_category_summary,
+        "top_product_by_category": top_product_by_category,
     }
 
 
@@ -351,7 +492,7 @@ def svg_bar_chart(
 
     lines = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
-        '<style>text{font-family:Arial,sans-serif;fill:#1f2937}.title{font-size:22px;font-weight:700}.label{font-size:13px}.value{font-size:12px;fill:#374151}</style>',
+        '<style>text{font-family:Arial,sans-serif;fill:#1f2937}.title{font-size:22px;font-weight:700}.label{font-size:13px}.value{font-size:12px;fill:#374151}.value-in-bar{font-size:12px;fill:#ffffff;font-weight:700}</style>',
         '<rect width="100%" height="100%" fill="#ffffff"/>',
         f'<text class="title" x="24" y="34">{escape(title)}</text>',
     ]
@@ -362,11 +503,18 @@ def svg_bar_chart(
         y = top + index * row_height
         bar_width = 0 if max_value == 0 else (value / max_value) * chart_width
         label_text = label if len(label) <= 34 else f"{label[:31]}..."
+        value_x = left + bar_width + 8
+        value_class = "value"
+        value_anchor = "start"
+        if value_x > width - 105:
+            value_x = left + bar_width - 8
+            value_class = "value-in-bar"
+            value_anchor = "end"
         lines.extend(
             [
                 f'<text class="label" x="24" y="{y + 15}">{escape(label_text)}</text>',
                 f'<rect x="{left}" y="{y}" width="{bar_width:.1f}" height="{bar_height}" fill="#3b82f6" rx="4"/>',
-                f'<text class="value" x="{left + bar_width + 8:.1f}" y="{y + 15}">{money(value)}</text>',
+                f'<text class="{value_class}" x="{value_x:.1f}" y="{y + 15}" text-anchor="{value_anchor}">{money(value)}</text>',
             ]
         )
 
@@ -479,6 +627,13 @@ def save_figures(outputs: dict[str, pd.DataFrame]) -> None:
         "Revenue by Customer Retention Type",
         FIGURES_DIR / "customer-retention.svg",
     )
+    svg_bar_chart(
+        outputs["product_category_summary"],
+        "ProductCategory",
+        "Revenue",
+        "Revenue by Product Category",
+        FIGURES_DIR / "product-category-revenue.svg",
+    )
 
 
 def save_summary(
@@ -496,6 +651,11 @@ def save_summary(
     repeat_customers = outputs["customer_retention_summary"].set_index("CustomerType").loc[
         "Repeat customer"
     ]
+    category_summary = outputs["product_category_summary"]
+    top_named_category = category_summary[
+        ~category_summary["ProductCategory"].isin(["Other", "Non-product Charges"])
+    ].iloc[0]
+    other_category = category_summary.set_index("ProductCategory").loc["Other"]
     start_date = clean_df["InvoiceDate"].min().date()
     end_date = clean_df["InvoiceDate"].max().date()
     cleaning_funnel = quality_outputs["cleaning_funnel"]
@@ -525,6 +685,7 @@ def save_summary(
 - Top revenue product: {top_product["Description"]} with {money(top_product["Revenue"])}
 - Top country: {top_country["Country"]} with {money(top_country["Revenue"])}
 - Repeat customers generate {repeat_customers["RevenueShare"]:.1%} of cleaned revenue.
+- Highest-revenue named product category: {top_named_category["ProductCategory"]} with {money(top_named_category["Revenue"])} ({top_named_category["RevenueShare"]:.1%} of revenue).
 
 ## Data Quality Notes
 
@@ -539,6 +700,12 @@ def save_summary(
 - Strongest weekday: {seasonality.loc["Highest revenue weekday", "Period"]} with {money(seasonality.loc["Highest revenue weekday", "Revenue"])}
 - Weakest weekday: {seasonality.loc["Lowest revenue weekday", "Period"]} with {money(seasonality.loc["Lowest revenue weekday", "Revenue"])}
 
+## Product Category Notes
+
+- Product categories are inferred from description keywords because the source dataset does not include a category field.
+- The highest-revenue named category is {top_named_category["ProductCategory"]} with {money(top_named_category["Revenue"])}.
+- Products classified as Other generate {other_category["RevenueShare"]:.1%} of revenue, so category results should be used as a directional business view rather than an official product taxonomy.
+
 ## Business Recommendations
 
 - Prioritize inventory planning around the highest-revenue products before seasonal peaks.
@@ -546,6 +713,7 @@ def save_summary(
 - Use high-value customer segments for retention campaigns, loyalty offers, or targeted communication.
 - Protect repeat-customer relationships because they generate most of the cleaned revenue.
 - Plan inventory and promotions before the strongest monthly and weekly sales periods.
+- Use category performance to prioritize merchandising tests, while reviewing the Other group before operational adoption.
 """
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)

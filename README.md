@@ -8,7 +8,7 @@ The project includes both a Python analysis workflow and a SQL analysis version,
 
 - How much revenue was generated after cleaning invalid transactions?
 - Which months produced the strongest sales performance?
-- Which products, countries, and customers contributed the most revenue?
+- Which products, product categories, countries, and customers contributed the most revenue?
 - What actions could improve sales and retention?
 
 ## Dataset
@@ -35,6 +35,7 @@ Cleaning steps:
 | Countries | 37 |
 | Average order value | £481 |
 | Revenue from repeat customers | 93.1% |
+| Highest-revenue named category | Home Decor (£2,376,071) |
 
 ## Sales Seasonality Insights
 
@@ -43,6 +44,14 @@ Revenue shows a clear seasonal pattern. November 2011 was the strongest month wi
 By weekday, Thursday generated the most revenue at £1,976,859, while Sunday generated the least at £792,514. Saturday does not appear in the cleaned transaction data, so weekday interpretation should be treated as dataset-specific.
 
 Detailed seasonality outputs are saved in `reports/tables/monthly_revenue.csv`, `reports/tables/weekly_revenue.csv`, `reports/tables/weekday_revenue.csv`, and `reports/tables/seasonality_summary.csv`.
+
+## Product Category Analysis
+
+The source data does not contain an official category field, so this project applies a transparent keyword-based taxonomy to product descriptions. Home Decor is the highest-revenue named category at £2,376,071, representing 26.7% of cleaned revenue. Kitchen & Dining follows with £1,933,684 and 21.7% of revenue.
+
+The `Other` group represents 19.6% of revenue. This coverage limitation means the categories are suitable for directional merchandising analysis, but the taxonomy should be reviewed before operational use. Non-product charges such as postage are identified separately.
+
+Detailed outputs are saved in `reports/tables/product_category_summary.csv` and `reports/tables/top_product_by_category.csv`.
 
 ## Data Quality Summary
 
@@ -102,6 +111,10 @@ See [`sql/online_retail_analysis.sql`](sql/online_retail_analysis.sql) for the f
 
 Repeat customers represent 65.6% of known customers but generate 93.1% of cleaned revenue. This suggests that retention, loyalty, and targeted communication are important business levers for this retailer.
 
+### Revenue by Product Category
+
+![Revenue by product category](reports/figures/product-category-revenue.svg)
+
 ## Business Recommendations
 
 - Prioritize inventory planning around the highest-revenue products before seasonal demand peaks.
@@ -110,6 +123,8 @@ Repeat customers represent 65.6% of known customers but generate 93.1% of cleane
 - Monitor monthly revenue patterns to prepare stock, promotions, and staffing before peak periods.
 - Protect repeat customers with loyalty campaigns because they contribute most of the revenue.
 - Prepare inventory, promotions, and staffing before the November and early-December sales peak.
+- Prioritize Home Decor and Kitchen & Dining in merchandising tests because together they generate 48.4% of cleaned revenue.
+- Review high-revenue products in the `Other` group before using the inferred taxonomy for inventory decisions.
 
 ## Project Structure
 

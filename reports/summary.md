@@ -19,6 +19,7 @@
 - Top revenue product: PAPER CRAFT , LITTLE BIRDIE with £168,470
 - Top country: United Kingdom with £7,308,392
 - Repeat customers generate 93.1% of cleaned revenue.
+- Highest-revenue named product category: Home Decor with £2,376,071 (26.7% of revenue).
 
 ## Data Quality Notes
 
@@ -33,6 +34,12 @@
 - Strongest weekday: Thursday with £1,976,859
 - Weakest weekday: Sunday with £792,514
 
+## Product Category Notes
+
+- Product categories are inferred from description keywords because the source dataset does not include a category field.
+- The highest-revenue named category is Home Decor with £2,376,071.
+- Products classified as Other generate 19.6% of revenue, so category results should be used as a directional business view rather than an official product taxonomy.
+
 ## Business Recommendations
 
 - Prioritize inventory planning around the highest-revenue products before seasonal peaks.
@@ -40,3 +47,4 @@
 - Use high-value customer segments for retention campaigns, loyalty offers, or targeted communication.
 - Protect repeat-customer relationships because they generate most of the cleaned revenue.
 - Plan inventory and promotions before the strongest monthly and weekly sales periods.
+- Use category performance to prioritize merchandising tests, while reviewing the Other group before operational adoption.
